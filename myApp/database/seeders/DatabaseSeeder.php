@@ -2,24 +2,68 @@
 
 namespace Database\Seeders;
 
-use App\Models\User;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
 {
-    use WithoutModelEvents;
-
     /**
-     * Seed the application's database.
+     * Jalankan seluruh seeder aplikasi.
      */
     public function run(): void
     {
-        // User::factory(10)->create();
+        // ==========================================
+        // 1. DATA MASTER
+        // ==========================================
 
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
+        // Poli harus tersedia sebelum Dokter dan Kunjungan.
+        $this->call([
+            PoliSeeder::class,
+        ]);
+
+        // ==========================================
+        // 2. DATA PENGGUNA
+        // ==========================================
+
+        // Membuat akun dan profil:
+        // - 10 Pasien
+        // - 2 Admin
+        // - 3 Dokter
+        $this->call([
+            PasienSeeder::class,
+            AdminSeeder::class,
+            DokterSeeder::class,
+        ]);
+
+        // ==========================================
+        // 3. DATA TRANSAKSI
+        // ==========================================
+
+        // Kunjungan membutuhkan Pasien, Dokter, dan Poli.
+        $this->call([
+            KunjunganSeeder::class,
+        ]);
+
+        // ==========================================
+        // 4. DATA DETAIL PELAYANAN
+        // ==========================================
+
+        // Setiap kunjungan memiliki:
+        // - Antrean
+        // - Pemeriksaan
+        // - Diagnosis
+        $this->call([
+            AntreanSeeder::class,
+            PemeriksaanSeeder::class,
+            DiagnosisSeeder::class,
+        ]);
+
+        // ==========================================
+        // 5. DATA LAPORAN
+        // ==========================================
+
+        // Laporan dibuat oleh Admin.
+        $this->call([
+            LaporanSeeder::class,
         ]);
     }
 }

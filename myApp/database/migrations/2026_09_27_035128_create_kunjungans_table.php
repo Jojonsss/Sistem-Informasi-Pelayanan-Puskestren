@@ -1,0 +1,57 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
+    {
+        Schema::create('kunjungans', function (Blueprint $table) {
+            // Primary Key
+            $table->id();
+
+            // Relasi ke pasien
+            $table->foreignId('pasien_id')
+                ->constrained('pasiens')
+                ->restrictOnDelete();
+
+            // Relasi ke dokter
+            $table->foreignId('dokter_id')
+                ->constrained('dokters')
+                ->restrictOnDelete();
+
+            // Relasi ke poli
+            $table->foreignId('poli_id')
+                ->constrained('polis')
+                ->restrictOnDelete();
+
+            // Data kunjungan
+            $table->date('tanggal_kunjungan');
+            $table->text('keluhan')->nullable();
+
+            // Status proses kunjungan
+            $table->enum('status', [
+                'menunggu',
+                'diperiksa',
+                'selesai',
+                'dibatalkan',
+            ])->default('menunggu');
+
+            // Timestamp
+            $table->timestamps();
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::dropIfExists('kunjungans');
+    }
+};
