@@ -1,193 +1,307 @@
-<!DOCTYPE html>
-<html lang="id">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Edit Pengguna - Puskestren</title>
+@extends('layouts.adminlte')
 
-    <style>
-        body {
-            margin: 0;
-            font-family: Arial, sans-serif;
-            background: #f3f4f6;
-        }
+@section('title', 'Edit Pengguna')
+@section('page_title', 'Edit Pengguna')
+@section('page_description', 'Memperbarui informasi akun pengguna')
 
-        .container {
-            max-width: 600px;
-            margin: 40px auto;
-            padding: 20px;
-        }
+@section('content')
 
-        .card {
-            background: white;
-            padding: 30px;
-            border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
-        }
+<div class="row justify-content-center">
 
-        label {
-            display: block;
-            margin-top: 15px;
-            margin-bottom: 6px;
-            font-weight: bold;
-        }
+    <div class="col-lg-8 col-xl-7">
 
-        input, select {
-            width: 100%;
-            padding: 11px;
-            border: 1px solid #ccc;
-            border-radius: 8px;
-        }
+        <div class="card card-warning">
 
-        .btn {
-            display: inline-block;
-            margin-top: 20px;
-            padding: 11px 18px;
-            border: none;
-            border-radius: 8px;
-            text-decoration: none;
-            cursor: pointer;
-        }
+            <div class="card-header">
 
-        .save {
-            background: #2563eb;
-            color: white;
-        }
+                <h3 class="card-title">
 
-        .back {
-            background: #6b7280;
-            color: white;
-        }
+                    <i class="bi bi-pencil-square me-2"></i>
 
-        .error {
-            padding: 12px;
-            background: #fee2e2;
-            color: #991b1b;
-            border-radius: 8px;
-            margin-bottom: 15px;
-        }
-    </style>
-</head>
+                    Form Edit Pengguna
 
-<body>
+                </h3>
 
-<div class="container">
-
-    <div class="card">
-
-        <h1>Edit Pengguna</h1>
-
-        @if ($errors->any())
-            <div class="error">
-                <ul>
-                    @foreach ($errors->all() as $error)
-                        <li>{{ $error }}</li>
-                    @endforeach
-                </ul>
             </div>
-        @endif
 
-        <form
-            method="POST"
-            action="{{ route('admin.users.update', $user) }}"
-        >
-            @csrf
-            @method('PUT')
 
-            <label for="name">Nama</label>
-            <input
-                type="text"
-                id="name"
-                name="name"
-                value="{{ old('name', $user->name) }}"
-                required
-            >
+            <div class="card-body">
 
-            <label for="email">Email</label>
-            <input
-                type="email"
-                id="email"
-                name="email"
-                value="{{ old('email', $user->email) }}"
-                required
-            >
+                @if ($errors->any())
 
-            <label for="password">
-                Password Baru
-                <small>(kosongkan jika tidak ingin mengubah)</small>
-            </label>
+                    <div class="alert alert-danger">
 
-            <input
-                type="password"
-                id="password"
-                name="password"
-                minlength="8"
-            >
+                        <strong>
+                            Data belum dapat diperbarui.
+                        </strong>
 
-            <label for="role">Role</label>
-            <select id="role" name="role" required>
+                        <ul class="mb-0 mt-2">
 
-                <option
-                    value="pasien"
-                    {{ $user->role === 'pasien' ? 'selected' : '' }}
+                            @foreach ($errors->all() as $error)
+
+                                <li>
+                                    {{ $error }}
+                                </li>
+
+                            @endforeach
+
+                        </ul>
+
+                    </div>
+
+                @endif
+
+
+                <form
+                    method="POST"
+                    action="{{ route('admin.users.update', $user) }}"
+                    novalidate
                 >
-                    Pasien
-                </option>
 
-                <option
-                    value="admin"
-                    {{ $user->role === 'admin' ? 'selected' : '' }}
-                >
-                    Admin
-                </option>
+                    @csrf
 
-                <option
-                    value="dokter"
-                    {{ $user->role === 'dokter' ? 'selected' : '' }}
-                >
-                    Dokter
-                </option>
+                    @method('PUT')
 
-            </select>
 
-            <label for="status">Status</label>
+                    {{-- Nama --}}
+                    <div class="mb-3">
 
-            <select id="status" name="status" required>
+                        <label
+                            for="name"
+                            class="form-label"
+                        >
+                            Nama
+                            <span class="text-danger">*</span>
+                        </label>
 
-                <option
-                    value="aktif"
-                    {{ $user->status === 'aktif' ? 'selected' : '' }}
-                >
-                    Aktif
-                </option>
+                        <div class="input-group">
 
-                <option
-                    value="nonaktif"
-                    {{ $user->status === 'nonaktif' ? 'selected' : '' }}
-                >
-                    Nonaktif
-                </option>
+                            <span class="input-group-text">
+                                <i class="bi bi-person"></i>
+                            </span>
 
-            </select>
+                            <input
+                                type="text"
+                                id="name"
+                                name="name"
+                                value="{{ old('name', $user->name) }}"
+                                class="form-control @error('name') is-invalid @enderror"
+                            >
 
-            <br>
+                            @error('name')
 
-            <button type="submit" class="btn save">
-                Simpan Perubahan
-            </button>
+                                <div class="invalid-feedback">
+                                    {{ $message }}
+                                </div>
 
-            <a
-                href="{{ route('admin.users.index') }}"
-                class="btn back"
-            >
-                Kembali
-            </a>
+                            @enderror
 
-        </form>
+                        </div>
+
+                    </div>
+
+
+                    {{-- Email --}}
+                    <div class="mb-3">
+
+                        <label
+                            for="email"
+                            class="form-label"
+                        >
+                            Email
+                            <span class="text-danger">*</span>
+                        </label>
+
+                        <div class="input-group">
+
+                            <span class="input-group-text">
+                                <i class="bi bi-envelope"></i>
+                            </span>
+
+                            <input
+                                type="email"
+                                id="email"
+                                name="email"
+                                value="{{ old('email', $user->email) }}"
+                                class="form-control @error('email') is-invalid @enderror"
+                            >
+
+                            @error('email')
+
+                                <div class="invalid-feedback">
+                                    {{ $message }}
+                                </div>
+
+                            @enderror
+
+                        </div>
+
+                    </div>
+
+
+                    {{-- Password --}}
+                    <div class="mb-3">
+
+                        <label
+                            for="password"
+                            class="form-label"
+                        >
+                            Password Baru
+                        </label>
+
+                        <div class="input-group">
+
+                            <span class="input-group-text">
+                                <i class="bi bi-lock-fill"></i>
+                            </span>
+
+                            <input
+                                type="password"
+                                id="password"
+                                name="password"
+                                class="form-control @error('password') is-invalid @enderror"
+                                placeholder="Kosongkan jika tidak ingin mengubah"
+                            >
+
+                            @error('password')
+
+                                <div class="invalid-feedback">
+                                    {{ $message }}
+                                </div>
+
+                            @enderror
+
+                        </div>
+
+                    </div>
+
+
+                    {{-- Role --}}
+                    <div class="mb-3">
+
+                        <label
+                            for="role"
+                            class="form-label"
+                        >
+                            Role
+                            <span class="text-danger">*</span>
+                        </label>
+
+                        <select
+                            id="role"
+                            name="role"
+                            class="form-select @error('role') is-invalid @enderror"
+                        >
+
+                            <option
+                                value="pasien"
+                                {{ old('role', $user->role) === 'pasien' ? 'selected' : '' }}
+                            >
+                                Pasien
+                            </option>
+
+                            <option
+                                value="admin"
+                                {{ old('role', $user->role) === 'admin' ? 'selected' : '' }}
+                            >
+                                Admin
+                            </option>
+
+                            <option
+                                value="dokter"
+                                {{ old('role', $user->role) === 'dokter' ? 'selected' : '' }}
+                            >
+                                Dokter
+                            </option>
+
+                        </select>
+
+                        @error('role')
+
+                            <div class="invalid-feedback">
+                                {{ $message }}
+                            </div>
+
+                        @enderror
+
+                    </div>
+
+
+                    {{-- Status --}}
+                    <div class="mb-3">
+
+                        <label
+                            for="status"
+                            class="form-label"
+                        >
+                            Status
+                            <span class="text-danger">*</span>
+                        </label>
+
+                        <select
+                            id="status"
+                            name="status"
+                            class="form-select @error('status') is-invalid @enderror"
+                        >
+
+                            <option
+                                value="aktif"
+                                {{ old('status', $user->status) === 'aktif' ? 'selected' : '' }}
+                            >
+                                Aktif
+                            </option>
+
+                            <option
+                                value="nonaktif"
+                                {{ old('status', $user->status) === 'nonaktif' ? 'selected' : '' }}
+                            >
+                                Nonaktif
+                            </option>
+
+                        </select>
+
+                        @error('status')
+
+                            <div class="invalid-feedback">
+                                {{ $message }}
+                            </div>
+
+                        @enderror
+
+                    </div>
+
+
+                    <hr>
+
+
+                    <div class="d-flex justify-content-end gap-2">
+
+                        <a
+                            href="{{ route('admin.users.index') }}"
+                            class="btn btn-secondary"
+                        >
+                            <i class="bi bi-arrow-left me-1"></i>
+                            Kembali
+                        </a>
+
+                        <button
+                            type="submit"
+                            class="btn btn-warning"
+                        >
+                            <i class="bi bi-check-circle me-1"></i>
+                            Simpan Perubahan
+                        </button>
+
+                    </div>
+
+                </form>
+
+            </div>
+
+        </div>
 
     </div>
 
 </div>
 
-</body>
-</html>
+@stop

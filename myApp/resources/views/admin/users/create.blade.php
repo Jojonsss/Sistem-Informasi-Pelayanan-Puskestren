@@ -1,369 +1,316 @@
-<!DOCTYPE html>
-<html lang="id">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+@extends('layouts.adminlte')
 
-    <title>Tambah Pengguna - Puskestren</title>
+@section('title', 'Tambah Pengguna')
+@section('page_title', 'Tambah Pengguna')
+@section('page_description', 'Membuat akun pengguna baru')
 
-    <style>
-        * {
-            box-sizing: border-box;
-        }
+@section('content')
 
-        body {
-            margin: 0;
-            font-family: Arial, sans-serif;
-            background: #f3f4f6;
-            color: #111827;
-        }
+<div class="row justify-content-center">
 
-        .container {
-            max-width: 700px;
-            margin: 40px auto;
-            padding: 20px;
-        }
+    <div class="col-lg-8 col-xl-7">
 
-        .card {
-            background: #ffffff;
-            padding: 30px;
-            border-radius: 14px;
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
-        }
+        <div class="card card-primary">
 
-        h1 {
-            margin-top: 0;
-            margin-bottom: 8px;
-        }
+            <div class="card-header">
 
-        .description {
-            color: #6b7280;
-            margin-bottom: 25px;
-        }
+                <h3 class="card-title">
 
-        .alert-error {
-            padding: 14px 16px;
-            background: #fee2e2;
-            color: #991b1b;
-            border: 1px solid #fecaca;
-            border-radius: 8px;
-            margin-bottom: 20px;
-        }
+                    <i class="bi bi-person-plus-fill me-2"></i>
 
-        .alert-error ul {
-            margin: 8px 0 0 20px;
-            padding: 0;
-        }
+                    Form Tambah Pengguna
 
-        .form-group {
-            margin-bottom: 18px;
-        }
+                </h3>
 
-        label {
-            display: block;
-            margin-bottom: 7px;
-            font-weight: bold;
-        }
+            </div>
 
-        .required {
-            color: #dc2626;
-        }
 
-        input,
-        select {
-            width: 100%;
-            padding: 12px 14px;
-            border: 1px solid #d1d5db;
-            border-radius: 8px;
-            font-size: 15px;
-            background: #fff;
-        }
+            <div class="card-body">
 
-        input:focus,
-        select:focus {
-            outline: none;
-            border-color: #2563eb;
-            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
-        }
+                @if ($errors->any())
 
-        .is-invalid {
-            border-color: #dc2626;
-        }
+                    <div class="alert alert-danger">
 
-        .error-message {
-            display: block;
-            margin-top: 6px;
-            color: #dc2626;
-            font-size: 14px;
-        }
+                        <strong>
+                            Data belum dapat disimpan.
+                        </strong>
 
-        .help-text {
-            display: block;
-            margin-top: 6px;
-            color: #6b7280;
-            font-size: 13px;
-        }
+                        <ul class="mb-0 mt-2">
 
-        .actions {
-            display: flex;
-            gap: 10px;
-            margin-top: 25px;
-        }
+                            @foreach ($errors->all() as $error)
 
-        .btn {
-            display: inline-block;
-            padding: 11px 18px;
-            border: none;
-            border-radius: 8px;
-            text-decoration: none;
-            cursor: pointer;
-            font-size: 15px;
-        }
+                                <li>
+                                    {{ $error }}
+                                </li>
 
-        .btn-primary {
-            background: #2563eb;
-            color: #ffffff;
-        }
+                            @endforeach
 
-        .btn-primary:hover {
-            background: #1d4ed8;
-        }
+                        </ul>
 
-        .btn-secondary {
-            background: #6b7280;
-            color: #ffffff;
-        }
+                    </div>
 
-        .btn-secondary:hover {
-            background: #4b5563;
-        }
+                @endif
 
-        .admin-info {
-            margin-bottom: 20px;
-            padding: 12px 14px;
-            background: #eff6ff;
-            color: #1e40af;
-            border-radius: 8px;
-            font-size: 14px;
-        }
-    </style>
-</head>
 
-<body>
+                <form
+                    method="POST"
+                    action="{{ route('admin.users.store') }}"
+                    novalidate
+                >
 
-<div class="container">
+                    @csrf
 
-    <div class="card">
 
-        <h1>Tambah Pengguna</h1>
+                    {{-- Nama --}}
+                    <div class="mb-3">
 
-        <p class="description">
-            Tambahkan akun pengguna baru ke sistem Puskestren.
-        </p>
+                        <label
+                            for="name"
+                            class="form-label"
+                        >
+                            Nama
+                            <span class="text-danger">*</span>
+                        </label>
 
-        <div class="admin-info">
-            Anda login sebagai:
-            <strong>{{ auth()->user()->name }}</strong>
-            ({{ auth()->user()->role }})
+                        <div class="input-group">
+
+                            <span class="input-group-text">
+                                <i class="bi bi-person"></i>
+                            </span>
+
+                            <input
+                                type="text"
+                                id="name"
+                                name="name"
+                                value="{{ old('name') }}"
+                                class="form-control @error('name') is-invalid @enderror"
+                                placeholder="Masukkan nama pengguna"
+                            >
+
+                            @error('name')
+
+                                <div class="invalid-feedback">
+                                    {{ $message }}
+                                </div>
+
+                            @enderror
+
+                        </div>
+
+                    </div>
+
+
+                    {{-- Email --}}
+                    <div class="mb-3">
+
+                        <label
+                            for="email"
+                            class="form-label"
+                        >
+                            Email
+                            <span class="text-danger">*</span>
+                        </label>
+
+                        <div class="input-group">
+
+                            <span class="input-group-text">
+                                <i class="bi bi-envelope"></i>
+                            </span>
+
+                            <input
+                                type="email"
+                                id="email"
+                                name="email"
+                                value="{{ old('email') }}"
+                                class="form-control @error('email') is-invalid @enderror"
+                                placeholder="contoh@email.com"
+                            >
+
+                            @error('email')
+
+                                <div class="invalid-feedback">
+                                    {{ $message }}
+                                </div>
+
+                            @enderror
+
+                        </div>
+
+                    </div>
+
+
+                    {{-- Password --}}
+                    <div class="mb-3">
+
+                        <label
+                            for="password"
+                            class="form-label"
+                        >
+                            Password
+                            <span class="text-danger">*</span>
+                        </label>
+
+                        <div class="input-group">
+
+                            <span class="input-group-text">
+                                <i class="bi bi-lock-fill"></i>
+                            </span>
+
+                            <input
+                                type="password"
+                                id="password"
+                                name="password"
+                                class="form-control @error('password') is-invalid @enderror"
+                                placeholder="Minimal 8 karakter"
+                            >
+
+                            @error('password')
+
+                                <div class="invalid-feedback">
+                                    {{ $message }}
+                                </div>
+
+                            @enderror
+
+                        </div>
+
+                        <small class="text-body-secondary">
+                            Password minimal 8 karakter.
+                        </small>
+
+                    </div>
+
+
+                    {{-- Role --}}
+                    <div class="mb-3">
+
+                        <label
+                            for="role"
+                            class="form-label"
+                        >
+                            Role
+                            <span class="text-danger">*</span>
+                        </label>
+
+                        <select
+                            id="role"
+                            name="role"
+                            class="form-select @error('role') is-invalid @enderror"
+                        >
+
+                            <option value="">
+                                -- Pilih Role --
+                            </option>
+
+                            <option
+                                value="pasien"
+                                {{ old('role') === 'pasien' ? 'selected' : '' }}
+                            >
+                                Pasien
+                            </option>
+
+                            <option
+                                value="admin"
+                                {{ old('role') === 'admin' ? 'selected' : '' }}
+                            >
+                                Admin
+                            </option>
+
+                            <option
+                                value="dokter"
+                                {{ old('role') === 'dokter' ? 'selected' : '' }}
+                            >
+                                Dokter
+                            </option>
+
+                        </select>
+
+                        @error('role')
+
+                            <div class="invalid-feedback">
+                                {{ $message }}
+                            </div>
+
+                        @enderror
+
+                    </div>
+
+
+                    {{-- Status --}}
+                    <div class="mb-3">
+
+                        <label
+                            for="status"
+                            class="form-label"
+                        >
+                            Status
+                            <span class="text-danger">*</span>
+                        </label>
+
+                        <select
+                            id="status"
+                            name="status"
+                            class="form-select @error('status') is-invalid @enderror"
+                        >
+
+                            <option
+                                value="aktif"
+                                {{ old('status', 'aktif') === 'aktif' ? 'selected' : '' }}
+                            >
+                                Aktif
+                            </option>
+
+                            <option
+                                value="nonaktif"
+                                {{ old('status') === 'nonaktif' ? 'selected' : '' }}
+                            >
+                                Nonaktif
+                            </option>
+
+                        </select>
+
+                        @error('status')
+
+                            <div class="invalid-feedback">
+                                {{ $message }}
+                            </div>
+
+                        @enderror
+
+                    </div>
+
+
+                    <hr>
+
+
+                    <div class="d-flex justify-content-end gap-2">
+
+                        <a
+                            href="{{ route('admin.users.index') }}"
+                            class="btn btn-secondary"
+                        >
+                            <i class="bi bi-arrow-left me-1"></i>
+                            Kembali
+                        </a>
+
+                        <button
+                            type="submit"
+                            class="btn btn-primary"
+                        >
+                            <i class="bi bi-save me-1"></i>
+                            Simpan Pengguna
+                        </button>
+
+                    </div>
+
+                </form>
+
+            </div>
+
         </div>
-
-        {{-- Ringkasan seluruh error validasi Laravel --}}
-        @if ($errors->any())
-            <div class="alert-error">
-                <strong>Data belum dapat disimpan.</strong>
-
-                <ul>
-                    @foreach ($errors->all() as $error)
-                        <li>{{ $error }}</li>
-                    @endforeach
-                </ul>
-            </div>
-        @endif
-
-        <form
-            method="POST"
-            action="{{ route('admin.users.store') }}"
-            novalidate
-        >
-            @csrf
-
-            {{-- Nama --}}
-            <div class="form-group">
-
-                <label for="name">
-                    Nama <span class="required">*</span>
-                </label>
-
-                <input
-                    type="text"
-                    id="name"
-                    name="name"
-                    value="{{ old('name') }}"
-                    class="@error('name') is-invalid @enderror"
-                >
-
-                @error('name')
-                    <span class="error-message">
-                        {{ $message }}
-                    </span>
-                @enderror
-
-            </div>
-
-            {{-- Email --}}
-            <div class="form-group">
-
-                <label for="email">
-                    Email <span class="required">*</span>
-                </label>
-
-                <input
-                    type="email"
-                    id="email"
-                    name="email"
-                    value="{{ old('email') }}"
-                    class="@error('email') is-invalid @enderror"
-                >
-
-                @error('email')
-                    <span class="error-message">
-                        {{ $message }}
-                    </span>
-                @enderror
-
-            </div>
-
-            {{-- Password --}}
-            <div class="form-group">
-
-                <label for="password">
-                    Password <span class="required">*</span>
-                </label>
-
-                <input
-                    type="password"
-                    id="password"
-                    name="password"
-                    class="@error('password') is-invalid @enderror"
-                >
-
-                <span class="help-text">
-                    Minimal 8 karakter.
-                </span>
-
-                @error('password')
-                    <span class="error-message">
-                        {{ $message }}
-                    </span>
-                @enderror
-
-            </div>
-
-            {{-- Role --}}
-            <div class="form-group">
-
-                <label for="role">
-                    Role <span class="required">*</span>
-                </label>
-
-                <select
-                    id="role"
-                    name="role"
-                    class="@error('role') is-invalid @enderror"
-                >
-                    <option value="">-- Pilih Role --</option>
-
-                    <option
-                        value="pasien"
-                        {{ old('role') === 'pasien' ? 'selected' : '' }}
-                    >
-                        Pasien
-                    </option>
-
-                    <option
-                        value="admin"
-                        {{ old('role') === 'admin' ? 'selected' : '' }}
-                    >
-                        Admin
-                    </option>
-
-                    <option
-                        value="dokter"
-                        {{ old('role') === 'dokter' ? 'selected' : '' }}
-                    >
-                        Dokter
-                    </option>
-                </select>
-
-                @error('role')
-                    <span class="error-message">
-                        {{ $message }}
-                    </span>
-                @enderror
-
-            </div>
-
-            {{-- Status --}}
-            <div class="form-group">
-
-                <label for="status">
-                    Status <span class="required">*</span>
-                </label>
-
-                <select
-                    id="status"
-                    name="status"
-                    class="@error('status') is-invalid @enderror"
-                >
-                    <option value="">-- Pilih Status --</option>
-
-                    <option
-                        value="aktif"
-                        {{ old('status', 'aktif') === 'aktif' ? 'selected' : '' }}
-                    >
-                        Aktif
-                    </option>
-
-                    <option
-                        value="nonaktif"
-                        {{ old('status') === 'nonaktif' ? 'selected' : '' }}
-                    >
-                        Nonaktif
-                    </option>
-                </select>
-
-                @error('status')
-                    <span class="error-message">
-                        {{ $message }}
-                    </span>
-                @enderror
-
-            </div>
-
-            {{-- Tombol --}}
-            <div class="actions">
-
-                <button
-                    type="submit"
-                    class="btn btn-primary"
-                >
-                    Simpan Pengguna
-                </button>
-
-                <a
-                    href="{{ route('admin.users.index') }}"
-                    class="btn btn-secondary"
-                >
-                    Kembali
-                </a>
-
-            </div>
-
-        </form>
 
     </div>
 
 </div>
 
-</body>
-</html>
+@stop

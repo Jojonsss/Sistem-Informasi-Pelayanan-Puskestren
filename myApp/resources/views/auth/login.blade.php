@@ -1,119 +1,134 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
     <title>Login - Puskestren</title>
 
-    <style>
-        * {
-            box-sizing: border-box;
-        }
-
-        body {
-            margin: 0;
-            font-family: Arial, sans-serif;
-            background: #f3f6f9;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-        }
-
-        .login-card {
-            width: 100%;
-            max-width: 420px;
-            background: white;
-            padding: 32px;
-            border-radius: 16px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
-        }
-
-        h1 {
-            margin-top: 0;
-            margin-bottom: 8px;
-        }
-
-        p {
-            color: #666;
-        }
-
-        label {
-            display: block;
-            margin-top: 16px;
-            margin-bottom: 6px;
-            font-weight: bold;
-        }
-
-        input {
-            width: 100%;
-            padding: 12px;
-            border: 1px solid #ccc;
-            border-radius: 8px;
-        }
-
-        button {
-            width: 100%;
-            margin-top: 24px;
-            padding: 12px;
-            border: none;
-            border-radius: 8px;
-            background: #2563eb;
-            color: white;
-            font-size: 16px;
-            cursor: pointer;
-        }
-
-        .error {
-            margin-top: 12px;
-            padding: 10px;
-            background: #fee2e2;
-            color: #991b1b;
-            border-radius: 8px;
-        }
-    </style>
+    @vite([
+        'resources/css/adminlte.css',
+        'resources/js/adminlte.js'
+    ])
 </head>
 
-<body>
+<body class="login-page bg-body-secondary">
 
-<div class="login-card">
+    <div class="login-box">
 
-    <h1>Login Puskestren</h1>
+        <div class="card card-outline card-primary">
 
-    <p>Sistem Informasi Pelayanan Puskestren</p>
+            {{-- Logo / Nama Aplikasi --}}
+            <div class="card-header text-center">
 
-    @if ($errors->any())
-        <div class="error">
-            {{ $errors->first() }}
+                <a
+                    href="#"
+                    class="h1 text-decoration-none"
+                >
+                    <b>PUSKESTREN</b>
+                </a>
+
+            </div>
+
+            <div class="card-body">
+
+                <p class="login-box-msg">
+                    Sistem Informasi Pelayanan Puskestren
+                </p>
+
+                {{-- Pesan Error Login --}}
+                @if ($errors->any())
+                    <div class="alert alert-danger">
+                        <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                        {{ $errors->first() }}
+                    </div>
+                @endif
+
+                {{-- Form Login --}}
+                <form
+                    action="{{ route('login.process') }}"
+                    method="POST"
+                >
+
+                    @csrf
+
+                    {{-- Email --}}
+                    <div class="input-group mb-3">
+
+                        <input
+                            type="email"
+                            name="email"
+                            class="form-control"
+                            placeholder="Email"
+                            value="{{ old('email') }}"
+                            required
+                            autofocus
+                        >
+
+                        <div class="input-group-text">
+                            <span class="bi bi-envelope"></span>
+                        </div>
+
+                    </div>
+
+                    {{-- Password --}}
+                    <div class="input-group mb-3">
+
+                        <input
+                            type="password"
+                            name="password"
+                            class="form-control"
+                            placeholder="Password"
+                            required
+                        >
+
+                        <div class="input-group-text">
+                            <span class="bi bi-lock-fill"></span>
+                        </div>
+
+                    </div>
+
+                    {{-- Tombol Login --}}
+                    <div class="row">
+
+                        <div class="col-12">
+
+                            <button
+                                type="submit"
+                                class="btn btn-primary w-100"
+                            >
+
+                                <i class="bi bi-box-arrow-in-right me-1"></i>
+
+                                Login
+
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                </form>
+
+                <div class="text-center mt-4">
+
+                    <small class="text-body-secondary">
+                        Sistem Informasi Pelayanan Puskestren
+                    </small>
+
+                </div>
+
+            </div>
+
         </div>
-    @endif
 
-    <form method="POST" action="{{ route('login.process') }}">
-        @csrf
-
-        <label for="email">Email</label>
-        <input
-            type="email"
-            id="email"
-            name="email"
-            value="{{ old('email') }}"
-            required
-        >
-
-        <label for="password">Password</label>
-        <input
-            type="password"
-            id="password"
-            name="password"
-            required
-        >
-
-        <button type="submit">
-            Login
-        </button>
-    </form>
-
-</div>
+    </div>
 
 </body>
+
 </html>
