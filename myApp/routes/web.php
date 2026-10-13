@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\UserManagementController;
+use App\Http\Controllers\DokterController;
 use App\Http\Middleware\RoleMiddleware;
 use Illuminate\Support\Facades\Route;
 
@@ -46,6 +47,7 @@ Route::middleware([
     });
 
 
+
 /*
 |--------------------------------------------------------------------------
 | Dashboard Dokter
@@ -55,16 +57,75 @@ Route::middleware([
 Route::middleware([
     'auth',
     RoleMiddleware::class . ':dokter',
-])
-    ->prefix('dokter')
-    ->name('dokter.')
-    ->group(function () {
+])->prefix('dokter')->name('dokter.')->group(function () {
 
-        Route::get('/dashboard', function () {
-            return view('dokter.dashboard');
-        })->name('dashboard');
-    });
+    // Dashboard dokter
+    Route::get('/dashboard', [
+        DokterController::class,
+        'dashboard'
+    ])->name('dashboard');
 
+    // Melihat daftar pasien
+    Route::get('/pasien', [
+        DokterController::class,
+        'pasien'
+    ])->name('pasien');
+
+    // Menyimpan pasien baru
+    Route::post('/pasien', [
+        DokterController::class,
+        'simpanPasien'
+    ])->name('pasien.simpan');
+
+    // Memperbarui data pasien
+    Route::put('/pasien/{id}', [
+        DokterController::class,
+        'updatePasien'
+    ])->name('pasien.update');
+
+    // Menghapus data pasien
+    Route::delete('/pasien/{id}', [
+        DokterController::class,
+        'hapusPasien'
+    ])->name('pasien.hapus');
+
+    // Detail pasien
+    Route::get('/pasien/{id}', [
+        DokterController::class,
+        'detailPasien'
+    ])->name('pasien.detail');
+    
+    // Menu melakukan pemeriksaan
+    Route::get('/pemeriksaan', [
+        DokterController::class,
+        'pemeriksaan'
+    ])->name('pemeriksaan');
+
+    Route::post('/pemeriksaan/{kunjunganId}', [
+        DokterController::class,
+        'simpanPemeriksaan'
+    ])->name('pemeriksaan.simpan');
+    
+// Menu catat diagnosis
+Route::get('/diagnosis', [
+    DokterController::class,
+    'diagnosis'
+])->name('diagnosis');
+
+Route::post('/diagnosis/{kunjunganId}', [
+    DokterController::class,
+    'simpanDiagnosis'
+])->name('diagnosis.simpan');
+
+// Menu riwayat pasien
+Route::get('/riwayat', [
+    DokterController::class,
+    'riwayat'
+])->name('riwayat');
+
+
+
+});
 
 /*
 |--------------------------------------------------------------------------
