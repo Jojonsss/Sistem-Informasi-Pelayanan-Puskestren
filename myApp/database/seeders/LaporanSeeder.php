@@ -12,6 +12,10 @@ class LaporanSeeder extends Seeder
     {
         $admins = Admin::orderBy('id')->get();
 
+        if ($admins->isEmpty()) {
+            return;
+        }
+
         $jenisLaporan = [
             'Laporan Data Pasien',
             'Laporan Kunjungan',
@@ -25,13 +29,17 @@ class LaporanSeeder extends Seeder
         ];
 
         foreach ($jenisLaporan as $index => $jenis) {
-            Laporan::create([
-                'admin_id' => $admins[$index % $admins->count()]->id,
-                'jenis_laporan' => $jenis,
-                'periode' => $periode[$index],
-                'tanggal_cetak' => now()->subDays($index + 1),
-                'file_laporan' => 'laporan-' . ($index + 1) . '.pdf',
-            ]);
+            Laporan::updateOrCreate(
+                [
+                    'jenis_laporan' => $jenis,
+                    'periode' => $periode[$index],
+                ],
+                [
+                    'admin_id' => $admins[$index % $admins->count()]->id,
+                    'tanggal_cetak' => now()->subDays($index + 1),
+                    'file_laporan' => 'laporan-' . ($index + 1) . '.pdf',
+                ]
+            );
         }
     }
 }

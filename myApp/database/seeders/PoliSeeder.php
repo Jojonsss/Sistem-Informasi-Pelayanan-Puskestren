@@ -7,9 +7,6 @@ use Illuminate\Database\Seeder;
 
 class PoliSeeder extends Seeder
 {
-    /**
-     * Jalankan seeder.
-     */
     public function run(): void
     {
         $dataPoli = [
@@ -31,7 +28,13 @@ class PoliSeeder extends Seeder
         ];
 
         foreach ($dataPoli as $poli) {
-            Poli::create($poli);
+            Poli::updateOrCreate(
+                ['nama_poli' => $poli['nama_poli']],
+                [
+                    'deskripsi' => $poli['deskripsi'],
+                    'status' => $poli['status'],
+                ]
+            );
         }
     }
 }
