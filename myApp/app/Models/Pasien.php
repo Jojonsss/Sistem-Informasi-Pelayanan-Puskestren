@@ -12,28 +12,25 @@ class Pasien extends Model
     use HasFactory;
 
     protected $table = 'pasiens';
+    protected $primaryKey = 'id_pasien';
 
     protected $fillable = [
         'user_id',
         'jenis_pasien',
-        'no_identitas',
+        'nama',
         'alamat',
-        'no_hp',
+        'asrama',
+        'no_identitas',
+        'tanggal_lahir',
     ];
 
-    /**
-     * Satu pasien dimiliki oleh satu user.
-     */
     public function user(): BelongsTo
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'user_id', 'id_user');
     }
 
-    /**
-     * Satu pasien dapat memiliki banyak kunjungan.
-     */
     public function kunjungans(): HasMany
     {
-        return $this->hasMany(Kunjungan::class);
+        return $this->hasMany(Kunjungan::class, 'id_pasien', 'id_pasien');
     }
 }

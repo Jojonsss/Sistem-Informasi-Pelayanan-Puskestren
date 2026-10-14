@@ -11,23 +11,25 @@ class Antrean extends Model
     use HasFactory;
 
     protected $table = 'antreans';
+    protected $primaryKey = 'id_antrean';
 
     protected $fillable = [
-        'kunjungan_id',
-        'nomor_antrian',
+        'id_kunjungan',
+        'nomor_antrean',
         'status',
-        'waktu_daftar',
+        'waktu_panggil',
     ];
 
     protected $casts = [
-        'waktu_daftar' => 'datetime',
+        'waktu_panggil' => 'datetime',
     ];
 
-    /**
-     * Satu antrean dimiliki oleh satu kunjungan.
-     */
     public function kunjungan(): BelongsTo
     {
-        return $this->belongsTo(Kunjungan::class);
+        return $this->belongsTo(
+            Kunjungan::class,
+            'id_kunjungan',
+            'id_kunjungan'
+        );
     }
 }

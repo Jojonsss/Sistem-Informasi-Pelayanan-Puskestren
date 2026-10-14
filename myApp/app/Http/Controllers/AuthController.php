@@ -26,9 +26,8 @@ class AuthController extends Controller
         ]);
 
         if (!Auth::attempt([
-            'email' => $credentials['email'],
-            'password' => $credentials['password'],
-            'status' => 'aktif',
+    'email' => $credentials['email'],
+    'password' => $credentials['password'],
         ])) {
             return back()
                 ->withErrors([
@@ -40,13 +39,15 @@ class AuthController extends Controller
         $request->session()->regenerate();
 
         $user = Auth::user();
+$role = $user->roleData?->nama_role;
 
-        return match ($user->role) {
-            'admin' => redirect()->route('admin.dashboard'),
-            'dokter' => redirect()->route('dokter.dashboard'),
-            'pasien' => redirect()->route('pasien.dashboard'),
-            default => abort(403, 'Role pengguna tidak valid.'),
-        };
+return match ($role) {
+    'admin' => redirect()->route('admin.dashboard'),
+    'dokter' => redirect()->route('dokter.dashboard'),
+    'pasien' => redirect()->route('pasien.dashboard'),
+    default => abort(403, 'Role pengguna tidak valid.'),
+};
+
     }
 
     /**

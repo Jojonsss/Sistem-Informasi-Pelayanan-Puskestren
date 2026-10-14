@@ -5,6 +5,7 @@ use App\Http\Controllers\UserManagementController;
 use App\Http\Controllers\DokterController;
 use App\Http\Middleware\RoleMiddleware;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\PasienController;
 
 /*
 |--------------------------------------------------------------------------
@@ -33,6 +34,7 @@ Route::post('/logout', [AuthController::class, 'logout'])
 |--------------------------------------------------------------------------
 */
 
+
 Route::middleware([
     'auth',
     RoleMiddleware::class . ':pasien',
@@ -40,13 +42,24 @@ Route::middleware([
     ->prefix('pasien')
     ->name('pasien.')
     ->group(function () {
+        Route::get('/dashboard', [PasienController::class, 'dashboard'])
+            ->name('dashboard');
 
-        Route::get('/dashboard', function () {
-            return view('pasien.dashboard');
-        })->name('dashboard');
+        Route::get('/pendaftaran', [PasienController::class, 'createKunjungan'])
+            ->name('pendaftaran');
+
+        Route::post('/pendaftaran', [PasienController::class, 'storeKunjungan'])
+            ->name('pendaftaran.store');
+
+        Route::get('/antrean', [PasienController::class, 'antrean'])
+            ->name('antrean');
+
+        Route::get('/riwayat', [PasienController::class, 'riwayat'])
+            ->name('riwayat');
+
+        Route::get('/status-antrean', [PasienController::class, 'statusAntrean'])
+            ->name('status-antrean');
     });
-
-
 
 /*
 |--------------------------------------------------------------------------
@@ -94,7 +107,7 @@ Route::middleware([
         DokterController::class,
         'detailPasien'
     ])->name('pasien.detail');
-    
+
     // Menu melakukan pemeriksaan
     Route::get('/pemeriksaan', [
         DokterController::class,
@@ -105,7 +118,7 @@ Route::middleware([
         DokterController::class,
         'simpanPemeriksaan'
     ])->name('pemeriksaan.simpan');
-    
+
 // Menu catat diagnosis
 Route::get('/diagnosis', [
     DokterController::class,

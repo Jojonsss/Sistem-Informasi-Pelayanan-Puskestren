@@ -12,65 +12,72 @@ class Kunjungan extends Model
     use HasFactory;
 
     protected $table = 'kunjungans';
+    protected $primaryKey = 'id_kunjungan';
 
     protected $fillable = [
-        'pasien_id',
-        'dokter_id',
-        'poli_id',
-        'tanggal_kunjungan',
-        'keluhan',
+        'id_pasien',
+        'id_dokter',
+        'id_poli',
+        'tanggal',
         'status',
+        'keluhan_awal',
     ];
 
     protected $casts = [
-        'tanggal_kunjungan' => 'date',
+        'tanggal' => 'date',
     ];
 
-    /**
-     * Satu kunjungan dimiliki oleh satu pasien.
-     */
     public function pasien(): BelongsTo
     {
-        return $this->belongsTo(Pasien::class);
+        return $this->belongsTo(
+            Pasien::class,
+            'id_pasien',
+            'id_pasien'
+        );
     }
 
-    /**
-     * Satu kunjungan ditangani oleh satu dokter.
-     */
     public function dokter(): BelongsTo
     {
-        return $this->belongsTo(Dokter::class);
+        return $this->belongsTo(
+            Dokter::class,
+            'id_dokter',
+            'id_dokter'
+        );
     }
 
-    /**
-     * Satu kunjungan berada pada satu poli.
-     */
     public function poli(): BelongsTo
     {
-        return $this->belongsTo(Poli::class);
+        return $this->belongsTo(
+            Poli::class,
+            'id_poli',
+            'id_poli'
+        );
     }
 
-    /**
-     * Satu kunjungan memiliki satu antrean.
-     */
     public function antrean(): HasOne
     {
-        return $this->hasOne(Antrean::class);
+        return $this->hasOne(
+            Antrean::class,
+            'id_kunjungan',
+            'id_kunjungan'
+        );
     }
 
-    /**
-     * Satu kunjungan memiliki satu pemeriksaan.
-     */
     public function pemeriksaan(): HasOne
     {
-        return $this->hasOne(Pemeriksaan::class);
+        return $this->hasOne(
+            Pemeriksaan::class,
+            'id_kunjungan',
+            'id_kunjungan'
+        );
     }
 
-    /**
-     * Satu kunjungan memiliki satu diagnosis.
-     */
     public function diagnosis(): HasOne
     {
-        return $this->hasOne(Diagnosis::class);
+        return $this->hasOne(
+            Diagnosis::class,
+            'id_kunjungan',
+            'id_kunjungan'
+        );
     }
 }
