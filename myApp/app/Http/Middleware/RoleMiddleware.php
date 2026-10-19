@@ -8,9 +8,6 @@ use Symfony\Component\HttpFoundation\Response;
 
 class RoleMiddleware
 {
-    /**
-     * Batasi akses berdasarkan role user.
-     */
     public function handle(
         Request $request,
         Closure $next,
@@ -21,7 +18,7 @@ class RoleMiddleware
         }
 
         $user = auth()->user();
-        $role = $user->roleData?->nama_role;
+        $role = $user->role;
 
         if (!$role || !in_array($role, $roles, true)) {
             abort(403, 'Anda tidak memiliki akses ke halaman ini.');

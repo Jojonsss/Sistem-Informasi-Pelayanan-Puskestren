@@ -23,7 +23,7 @@ class PasienController extends Controller
             abort(401, 'Silakan login terlebih dahulu.');
         }
 
-        $pasien = Pasien::where('user_id', $user->id_user)->first();
+       $pasien = Pasien::where('user_id', $user->id)->first();
 
         if (!$pasien) {
             abort(
