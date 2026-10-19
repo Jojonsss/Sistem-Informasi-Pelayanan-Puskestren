@@ -165,8 +165,42 @@
         </div>
     @endif
 
-    <div class="card">
-        <h2>Daftar Kunjungan Pasien</h2>
+    
+<div class="card">
+    <h2>Daftar Kunjungan Pasien</h2>
+
+    <form method="GET" action="{{ route('dokter.pemeriksaan') }}"
+          style="display:flex;gap:12px;flex-wrap:wrap;align-items:end;margin-bottom:20px">
+
+        <div style="min-width:180px;flex:1">
+            <label for="status" style="display:block;margin-bottom:7px;font-weight:bold">
+                Filter Status
+            </label>
+            <select name="status" id="status"
+                    style="width:100%;padding:11px;border:1px solid #d9e2de;border-radius:7px">
+                <option value="">Semua Status</option>
+                <option value="menunggu" {{ request('status') === 'menunggu' ? 'selected' : '' }}>Menunggu</option>
+                <option value="diperiksa" {{ request('status') === 'diperiksa' ? 'selected' : '' }}>Diperiksa</option>
+                <option value="selesai" {{ request('status') === 'selesai' ? 'selected' : '' }}>Selesai</option>
+                <option value="dibatalkan" {{ request('status') === 'dibatalkan' ? 'selected' : '' }}>Dibatalkan</option>
+            </select>
+        </div>
+
+        <div style="min-width:180px;flex:1">
+            <label for="tanggal" style="display:block;margin-bottom:7px;font-weight:bold">
+                Filter Tanggal
+            </label>
+            <input type="date" name="tanggal" id="tanggal"
+                   value="{{ request('tanggal') }}">
+        </div>
+
+        <button type="submit" class="button">Terapkan Filter</button>
+        <a href="{{ route('dokter.pemeriksaan') }}" class="button secondary">Reset Filter</a>
+    </form>
+    
+    <!-- Tabel kunjungan yang sudah ada tetap diletakkan di bawah sini -->
+</div>
+
 
         <div class="table-wrap">
             <table>

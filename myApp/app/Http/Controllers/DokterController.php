@@ -229,25 +229,40 @@ $query = DB::table('pasiens as p')
     /**
      * Menampilkan daftar kunjungan untuk pemeriksaan.
      */
-    public function pemeriksaan()
-    {
-        $kunjungans = DB::table('kunjungans as k')
-            ->join('pasiens as p', 'p.id', '=', 'k.pasien_id')
-            ->join('users as u', 'u.id', '=', 'p.user_id')
-            ->leftJoin('pemeriksaans as pm', 'pm.kunjungan_id', '=', 'k.id')
-            ->select(
-                'k.id as kunjungan_id',
-                'u.name',
-                'k.tanggal_kunjungan',
-                'k.keluhan',
-                'k.status',
-                'pm.id as pemeriksaan_id'
-            )
-            ->orderByDesc('k.tanggal_kunjungan')
-            ->get();
+    public function pemeriksaan(Request $request)
+{
+    $request->validate([
+        'status' => 'nullable|in:menunggu,diperiksa,selesai,dibatalkan',
+        'tanggal' => 'nullable|date',
+    ]);
 
-        return view('dokter.pemeriksaan.index', compact('kunjungans'));
+    $query = DB::table('kunjungans as k')
+        ->join('pasiens as p', 'p.id', '=', 'k.pasien_id')
+        ->join('users as u', 'u.id', '=', 'p.user_id')
+        ->leftJoin('pemeriksaans as pm', 'pm.kunjungan_id', '=', 'k.id')
+        ->select(
+            'k.id as kunjungan_id',
+            'u.name',
+            'k.tanggal_kunjungan',
+            'k.keluhan',
+            'k.status',
+            'pm.id as pemeriksaan_id'
+        );
+
+    if ($request->filled('status')) {
+        $query->where('k.status', $request->status);
     }
+
+    if ($request->filled('tanggal')) {
+        $query->whereDate('k.tanggal_kunjungan', $request->tanggal);
+    }
+
+    $kunjungans = $query
+        ->orderByDesc('k.tanggal_kunjungan')
+        ->get();
+
+    return view('dokter.pemeriksaan.index', compact('kunjungans'));
+}
 
     /**
      * Menyimpan hasil pemeriksaan pasien.
@@ -266,7 +281,10 @@ public function simpanPemeriksaan(Request $request, $kunjunganId)
         ->first();
 
     abort_if(!$kunjungan, 404, 'Kunjungan tidak ditemukan.');
-
+if (in_array($kunjungan->status, ['selesai', 'dibatalkan'])) {
+    return redirect()->route('dokter.pemeriksaan')
+        ->with('error', 'Kunjungan yang sudah selesai atau dibatalkan tidak dapat diperiksa kembali.');
+}
     $data = [
         'keluhan' => $request->keluhan,
         'riwayat_penyakit' => $request->riwayat_penyakit,
